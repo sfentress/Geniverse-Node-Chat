@@ -13,3 +13,8 @@ proc=Utils.pproc.Popen([lastprog],*args, **kw)
 
 The original node.js chat system can be found at http://chat.nodejs.org/
 
+After node.js has been installed, you can run the chat server using
+
+node chat/server.js
+
+by default, this will start the server at http://localhost:8001/
