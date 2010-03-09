@@ -2,20 +2,21 @@ Experiments using the node.js chat system with Geniverse.
 
 Node.js must first be pulled from their git repo and built, using the instructions at http://www.nodejs.org/#download. I found that I had to change line 546 of the file tools/wafadmin/Tools/config_c.py from 
 
-proc = Utils.pproc.Popen([lastprog], *args, stdout=Utils.pproc.PIPE, stderr=Utils.pproc.PIPE)
+  proc = Utils.pproc.Popen([lastprog], *args, stdout=Utils.pproc.PIPE, stderr=Utils.pproc.PIPE)
 
 to 
 
-kw = {}
-kw['stdout'] = kw['stderr'] = Utils.pproc.PIPE
-proc=Utils.pproc.Popen([lastprog],*args, **kw)
+  kw = {}
+  kw['stdout'] = kw['stderr'] = Utils.pproc.PIPE
+  proc=Utils.pproc.Popen([lastprog],*args, **kw)
 
+(fix was found at http://code.google.com/p/waf/issues/detail?id=626)
 
 The original node.js chat system can be found at http://chat.nodejs.org/
 
 After node.js has been installed, you can run the chat server:
 
-cd chat
-node server.js
+  cd chat
+  node server.js
 
 by default, this will start the server at http://localhost:8001/
