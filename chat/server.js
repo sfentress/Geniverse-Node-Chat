@@ -197,6 +197,7 @@ fu.get("/send", function (req, res) {
   res.simpleJSON(200, {});
 });
 
+// handle organism sending events
 fu.get("/sendorg", function (req, res) {
   var id = qs.parse(url.parse(req.url).query).id;
   // var jsonOrg = qs.parse(url.parse(req.url).query).organism;

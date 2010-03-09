@@ -70,20 +70,6 @@ function scrollDown () {
   $("#entry").focus();
 }
 
-function addOrganism(from, org, time) {
-	lastOrg = org;
-	addMessage(from, "Sent a dragon", time, "org");
-}
-
-function loadLastOrganism() {
-	addMessage("System", "Loading dragon", new Date(), "org");
-	var applet = document.getElementById("static-org-applet");
-	var jsonOrg = JSON.parse(lastOrg);
-	var alleleString = jsonOrg.alleleString;
-	var org = applet.createOrganismWithAlleleString(alleleString)
-	applet.addOrganisms([org]);
-}
-
 function addMessage (from, text, time, _class) {
   if (text === null)
     return;
@@ -155,7 +141,7 @@ function longPoll (data) {
           break;
 
 		case "org":
-          addOrganism(message.nick, message.text, message.timestamp);
+          receiveOrganism(message.nick, message.text, message.timestamp);
           break;
       }
     }
@@ -186,15 +172,6 @@ function send(msg) {
   if (CONFIG.debug === false) {
     // XXX should be POST
     jQuery.get("/send", {id: CONFIG.id, text: msg}, function (data) { }, "json");
-  }
-}
-
-function sendOrg(org) {
-  if (CONFIG.debug === false) {
-    // XXX should be POST
-
-	var jsonOrg = JSON.stringify(new organism(org));
-    jQuery.get("/sendorg", {id: CONFIG.id, organism: jsonOrg}, function (data) { }, "json");
   }
 }
 
@@ -260,11 +237,7 @@ $(document).ready(function() {
   $("#usersLink").click(outputUsers);
 
 	$("#sendbutton").click(function () {
-		var org = document.getElementById("static-org-applet").getOrganisms()[0];
-		if (org != null) {
-		  	sendOrg(org);
-		} else
-			send("could not load org");
+		sendCurrentOrganism()
 	  });
 	
 	$("#loadbutton").click(function () {
@@ -272,9 +245,7 @@ $(document).ready(function() {
 	  });
 	
 	$("#randombutton").click(function () {
-		var applet = document.getElementById("static-org-applet");
-		var org = applet.createOrganismWithAlleleString("a:h,b:h");
-		applet.addOrganisms([org]);
+		addRandomOrganism()
 	  });
 
   $("#connectButton").click(function () {
@@ -331,6 +302,49 @@ $(document).ready(function() {
 $(window).unload(function () {
   jQuery.get("/part", {id: CONFIG.id}, function (data) { }, "json");
 });
+
+// *** Biologica Chat functions
+
+function sendOrg(org) {
+  if (CONFIG.debug === false) {
+    // XXX should be POST
+
+	var jsonOrg = JSON.stringify(new organism(org));
+    jQuery.get("/sendorg", {id: CONFIG.id, organism: jsonOrg}, function (data) { }, "json");
+  }
+}
+
+function receiveOrganism(from, org, time) {
+	lastOrg = org;
+	addMessage(from, "Sent a dragon", time, "org");
+}
+
+// *** Biologica Applet interaction functions
+
+function sendCurrentOrganism(){
+	var org = document.getElementById("static-org-applet").getOrganisms()[0];
+	if (org != null)
+	  	sendOrg(org);
+	else
+		send("could not load org");
+}
+
+function loadLastOrganism() {
+	addMessage("System", "Loading dragon", new Date(), "org");
+	var applet = document.getElementById("static-org-applet");
+	var jsonOrg = JSON.parse(lastOrg);
+	var alleleString = jsonOrg.alleleString;
+	var org = applet.createOrganismWithAlleleString(alleleString)
+	applet.addOrganisms([org]);
+}
+
+function addRandomOrganism(){
+	var applet = document.getElementById("static-org-applet");
+	var org = applet.createOrganismWithAlleleString("");
+	applet.addOrganisms([org]);
+}
+
+// *** Biologica Organism functions, needed for JSON, copied from gvdemo5
 
 function organism(org) {
   chromosomes = [];
