@@ -1,0 +1,15 @@
+Experiments using the node.js chat system with Geniverse.
+
+Node must first be pulled from their git repo and built, using the instructions at http://www.nodejs.org/#download. I found that I had to change line 546 of the file tools/wafadmin/Tools/config_c.py from 
+
+proc = Utils.pproc.Popen([lastprog], *args, stdout=Utils.pproc.PIPE, stderr=Utils.pproc.PIPE)
+
+to 
+
+kw = {}
+kw['stdout'] = kw['stderr'] = Utils.pproc.PIPE
+proc=Utils.pproc.Popen([lastprog],*args, **kw)
+
+
+The original node.js chat system can be found at http://chat.nodejs.org/
+
