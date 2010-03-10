@@ -334,7 +334,8 @@ function loadLastOrganism() {
 	var applet = document.getElementById("static-org-applet");
 	var jsonOrg = JSON.parse(lastOrg);
 	var alleleString = jsonOrg.alleleString;
-	var org = applet.createOrganismWithAlleleString(alleleString)
+	var sex = jsonOrg.sex;
+	var org = applet.createOrganismWithAlleleStringAndSex(alleleString,sex)
 	applet.addOrganisms([org]);
 }
 
@@ -349,7 +350,7 @@ function addRandomOrganism(){
 function organism(org) {
   chromosomes = [];
   this.name = org.getName();
-  this.sex = org.getSexAsString();
+  this.sex = org.getSex();
   this.alleleString = org.getAlleleString();
   chromosomes = getChromosomeArray(org);
   
